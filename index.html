@@ -2,18 +2,102 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Minijuego de Puntuación</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Palíndromos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 2rem;
+      background-color: #f3f4f6;
+    }
+    #juego {
+      display: none;
+    }
+    .emoji {
+      font-size: 2rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>¡Bienvenida, RommyHero!</h1>
-  <p>Haz clic para jugar:</p>
+  <div id="inicio" class="text-center">
+    <h2 class="mb-3">Ingresa tu nombre para comenzar</h2>
+    <input type="text" id="nombreJugador" class="form-control w-50 mx-auto" placeholder="Tu nombre aquí">
+    <button onclick="iniciarJuego()" class="btn btn-primary mt-3">Iniciar juego</button>
+  </div>
 
-  <button onclick="jugar(30)">Jugar +30 pts</button>
-  <button onclick="jugar(50)">Jugar +50 pts</button>
-  <button onclick="jugar(70)">Jugar +70 pts</button>
+  <div id="juego" class="text-center">
+    <h3 id="bienvenida" class="mb-4"></h3>
+    <div class="card p-3">
+      <h4 class="mb-3">¿Es esta palabra un palíndromo?</h4>
+      <div class="fs-2 mb-3" id="palabra"></div>
+      <button class="btn btn-success m-2" onclick="responder(true)">Es palíndromo ✅</button>
+      <button class="btn btn-danger m-2" onclick="responder(false)">No es palíndromo ❌</button>
+      <div id="mensaje" class="mt-3"></div>
+      <hr>
+      <div>
+        <span class="badge bg-primary">Puntos: <span id="puntos">3</span></span>
+      </div>
+    </div>
+  </div>
 
-  <div id="estado" style="margin-top:20px;"></div>
+  <script>
+    let jugador = {
+      nombre: '',
+      puntos: 3
+    };
 
-  <script src="assets/js/game.js"></script>
+    const palabras = [
+      "oso", "casa", "reconocer", "gato", "anilina", "rommy", "radar", "perro", "somos", "espejo"
+    ];
+
+    let palabraActual = "";
+
+    function iniciarJuego() {
+      const nombre = document.getElementById("nombreJugador").value.trim();
+      if (!nombre) {
+        alert("Por favor ingresa tu nombre.");
+        return;
+      }
+      jugador.nombre = nombre;
+      document.getElementById("bienvenida").innerText = `¡Bienvenida, ${jugador.nombre}!`;
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("juego").style.display = "block";
+      nuevaPalabra();
+    }
+
+    function nuevaPalabra() {
+      palabraActual = palabras[Math.floor(Math.random() * palabras.length)];
+      document.getElementById("palabra").innerText = palabraActual;
+      document.getElementById("mensaje").innerText = "";
+    }
+
+    function esPalindromo(palabra) {
+      const limpia = palabra.toLowerCase().replace(/\s/g, "");
+      const reversa = limpia.split("").reverse().join("");
+      return limpia === reversa;
+    }
+
+    function responder(respuestaUsuario) {
+      const correcto = esPalindromo(palabraActual);
+      const mensaje = document.getElementById("mensaje");
+      if (respuestaUsuario === correcto) {
+        jugador.puntos++;
+        mensaje.innerHTML = "<div class='alert alert-success'>✨ ¡Correcto! Ganaste un punto.</div>";
+      } else {
+        jugador.puntos--;
+        mensaje.innerHTML = "<div class='alert alert-danger'>❌ Incorrecto. Perdiste un punto.</div>";
+      }
+
+      document.getElementById("puntos").innerText = jugador.puntos;
+
+      if (jugador.puntos <= 0) {
+        mensaje.innerHTML += `<div class='alert alert-dark mt-3'>💔 Fin del juego, ${jugador.nombre}. Te quedaste sin puntos.</div>`;
+        document.querySelector(".btn-success").disabled = true;
+        document.querySelector(".btn-danger").disabled = true;
+      } else {
+        setTimeout(nuevaPalabra, 1500);
+      }
+    }
+  </script>
 </body>
 </html>
