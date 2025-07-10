@@ -36,6 +36,7 @@
       <hr>
       <div>
         <span class="badge bg-primary">Puntos: <span id="puntos">3</span></span>
+        <span class="badge bg-warning text-dark ms-2">Nivel: <span id="nivel">1</span></span>
       </div>
     </div>
   </div>
@@ -43,7 +44,8 @@
   <script>
     let jugador = {
       nombre: '',
-      puntos: 3
+      puntos: 3,
+      nivel: 1
     };
 
     const palabras = [
@@ -88,8 +90,24 @@
         mensaje.innerHTML = "<div class='alert alert-danger'>❌ Incorrecto. Perdiste un punto.</div>";
       }
 
-      document.getElementById("puntos").innerText = jugador.puntos;
+      // Verificar si sube de nivel
+      if (jugador.puntos % 5 === 0 && jugador.puntos > 0) {
+        jugador.nivel++;
+        mensaje.innerHTML += `<div class='alert alert-info mt-2'>🔼 ¡Subiste a nivel ${jugador.nivel}!</div>`;
+      }
 
+      // Verificar si gana el juego
+      if (jugador.puntos >= 10) {
+        mensaje.innerHTML += `<div class='alert alert-success mt-3'>🏆 ¡Felicidades ${jugador.nombre}, ganaste el juego!</div>`;
+        document.querySelector(".btn-success").disabled = true;
+        document.querySelector(".btn-danger").disabled = true;
+      }
+
+      // Actualizar puntaje y nivel
+      document.getElementById("puntos").innerText = jugador.puntos;
+      document.getElementById("nivel").innerText = jugador.nivel;
+
+      // Fin del juego si se queda sin puntos
       if (jugador.puntos <= 0) {
         mensaje.innerHTML += `<div class='alert alert-dark mt-3'>💔 Fin del juego, ${jugador.nombre}. Te quedaste sin puntos.</div>`;
         document.querySelector(".btn-success").disabled = true;
