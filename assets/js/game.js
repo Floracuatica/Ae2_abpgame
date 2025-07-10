@@ -30,23 +30,20 @@ function jugar(puntosGanados) {
     jugador.nivel++;
     console.log("¡Subiste al nivel " + jugador.nivel + "!");
   }
+// Mostrar estado en pantalla
+let mensaje = `
+  <p>Jugador: ${jugador.nombre}</p>
+  <p>Puntaje: ${jugador.puntaje}</p>
+  <p>Vidas: ${jugador.vidas}</p>
+  <p>Nivel: ${jugador.nivel}</p>
+`;
 
-  // Mostrar estado actual
-  console.log("Jugador: " + jugador.nombre);
-  console.log("Puntaje: " + jugador.puntaje);
-  console.log("Vidas: " + jugador.vidas);
-  console.log("Nivel: " + jugador.nivel);
-
-  // Condición de fin de juego
-  if (jugador.puntaje >= PUNTAJE_MAXIMO) {
-    console.log("¡Felicitaciones, alcanzaste el puntaje máximo!");
-  } else if (jugador.vidas <= 0) {
-    console.log("Fin del juego. Te quedaste sin vidas.");
-  }
+if (jugador.puntaje >= PUNTAJE_MAXIMO) {
+  mensaje += "<p>¡Felicitaciones, alcanzaste el puntaje máximo!</p>";
+} else if (jugador.vidas <= 0) {
+  mensaje += "<p>Fin del juego. Te quedaste sin vidas.</p>";
 }
 
-// Simulaciones de jugadas
-jugar(40);
-jugar(60);
-jugar(100);
-jugar(-5);  // caso límite
+document.getElementById("estado").innerHTML = mensaje;
+}
+
